@@ -63,9 +63,8 @@ public:
 
   void display_two_digits(float number);
 
-  void disp_1s(int number, bool period);
-
-  void disp_10s(int number, bool period);
+  enum DIGIT { DIGIT10s, DIGIT1s };
+  void disp_digit(DIGIT pos, int number, bool period);
 
   void load_state(int eeprom_address);
   void save_state(int eeprom_address);
@@ -78,5 +77,7 @@ private:
 
   PowerSupplyHardware();
 
+  static const int DIGIT_1_CODES[10];
+  static const int DIGIT_10_CODES[10];
 };
 #endif

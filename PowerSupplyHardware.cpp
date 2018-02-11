@@ -77,97 +77,65 @@ float PowerSupplyHardware::get_current(){
 void PowerSupplyHardware::display_two_digits(float number){
   number = round(abs(number)*10) / 10.0;
   if(number < 10){
-    disp_10s((int)number, true);
-    disp_1s((int)(number * 10) % 10, false);
+    disp_digit(DIGIT10s, (int)number, true);
+    disp_digit(DIGIT1s, (int)(number * 10) % 10, false);
   } else {
     number = round(number);
-    disp_10s(((int)number / 10) % 10, false);
-    disp_1s(((int)number) % 10, false);
+    disp_digit(DIGIT10s, ((int)number / 10) % 10, false);
+    disp_digit(DIGIT1s, ((int)number) % 10, false);
   }
 }
 
-void PowerSupplyHardware::disp_1s(int number, bool period){
-  byte code;
-  switch(number){
-    case 0:
-      code = 0b11011110;
-      break;
-    case 1:
-      code = 0b00011000;
-      break;
-    case 2:
-      code = 0b11001101;
-      break;
-    case 3:
-      code = 0b10011101;
-      break;
-    case 4:
-      code = 0b00011011;
-      break;
-    case 5:
-      code = 0b10010111;
-      break;
-    case 6:
-      code = 0b11010111;
-      break;
-    case 7:
-      code = 0b00011100;
-      break;
-    case 8:
-      code = 0b11011111;
-      break;
-    case 9:
-      code = 0b10011111;
-      break;
-    default:
-      code = 0b00000000;
-  }
-  if(period){
-    bitWrite(code, 5, 1); // set bit 5
-  }
-  voltage_output_1s.disp_byte(code);
-}
+const int PowerSupplyHardware::DIGIT_1_CODES[10] = {
+  0b11011110,
+  0b00011000,
+  0b11001101,
+  0b10011101,
+  0b00011011,
+  0b10010111,
+  0b11010111,
+  0b00011100,
+  0b11011111,
+  0b10011111
+};
+const int PowerSupplyHardware::DIGIT_10_CODES[10] = {
+  0b11011110,
+  0b01000010,
+  0b11101100,
+  0b11100110,
+  0b01110010,
+  0b10110110,
+  0b10111110,
+  0b11000010,
+  0b11111110,
+  0b11110110
+};
 
-void PowerSupplyHardware::disp_10s(int number, bool period){
-  byte code;
-  switch(number){
-    case 0:
-      code = 0b11011110;
-      break;
-    case 1:
-      code = 0b01000010;
-      break;
-    case 2:
-      code = 0b11101100;
-      break;
-    case 3:
-      code = 0b11100110;
-      break;
-    case 4:
-      code = 0b01110010;
-      break;
-    case 5:
-      code = 0b10110110;
-      break;
-    case 6:
-      code = 0b10111110;
-      break;
-    case 7:
-      code = 0b11000010;
-      break;
-    case 8:
-      code = 0b11111110;
-      break;
-    case 9:
-      code = 0b11110110;
-      break;
-    default:
-      code = 0b00000000;
+void PowerSupplyHardware::disp_digit(DIGIT pos, int number, bool period){
+  int *codes;
+  int decimal_bit; // Bit to set the period/decimal point on the digit
+  Shift7Segment *shift_reg;
+
+  if(pos == DIGIT1s){
+    codes = DIGIT_1_CODES;
+    decimal_bit = 5;
+    shift_reg = &voltage_output_1s;
+  } else if(pos == DIGIT10s){
+    codes = DIGIT_10_CODES;
+    decimal_bit = 0;
+    shift_reg = &voltage_output_10s;
+  } else {
+    return; // Invalid digit selection
+  }
+
+  byte code = 0;
+  if(number >= 0 && number < 10){
+    code = codes[number];
   }
   if(period){
-    bitWrite(code, 0, 1); // set bit 5
+    bitWrite(code, decimal_bit, 1); // set period bit
   }
-  voltage_output_10s.disp_byte(code);
+  shift_reg->disp_byte(code);
 }
 
 void PowerSupplyHardware::load_state(int eeprom_address){

@@ -31,5 +31,5 @@ Custom PCB schematics designed with CircuitMaker, available [here](https://works
 - [ ] System check on startup
 - [ ] Constant-current mode
 - [ ] Battery charger mode
-- [ ] Overcurrent prodection
+- [ ] Overcurrent protection
 - [ ] Diode/reverse voltage protection
