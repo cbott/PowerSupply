@@ -1,14 +1,14 @@
 # PowerSupply
-Arduino-controlled benchtop power supply
+## An Arduino-controlled benchtop power supply
 ![Complete benchtop power supply system](outside.png)
 
-###Features
+### Features
 * 3.8 to 19.5 VDC output
 * Up to 3A continuous current
 * Display voltage or current
 * RGB LED knob
 
-###Components
+### Components
 * Arduino Pro Mini 328 (5v/16MHz)
 * 40W Laptop charger for AC/DC conversion
 * Illuminated RGB encoder (Sparkfun COM-10982)
@@ -23,11 +23,11 @@ Arduino-controlled benchtop power supply
 * LM2596-based DC buck converter (x2)
 * A nifty aluminum box
 
-###PCB
+### PCB
 Custom PCB schematics designed with CircuitMaker, available [here](https://workspace.circuitmaker.com/Projects/Details/Colin-Bott/Variable-Power-Supply)
 ![Finished PCB](circuit.png)
 
-###Planned Improvements
+### Planned Improvements
 - [ ] System check on startup
 - [ ] Constant-current mode
 - [ ] Battery charger mode
